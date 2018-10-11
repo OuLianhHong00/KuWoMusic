@@ -1,0 +1,14 @@
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\bin\Debug\KuWoMusic2019.exe.config
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\bin\Debug\KuWoMusic2019.exe
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\bin\Debug\KuWoMusic2019.pdb
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.csprojResolveAssemblyReference.cache
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.FrmMain.resources
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.Properties.Resources.resources
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.csproj.GenerateResource.Cache
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.exe
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.pdb
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\bin\Debug\Interop.WMPLib.dll
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\bin\Debug\AxInterop.WMPLib.dll
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\Interop.WMPLib.dll
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\AxInterop.WMPLib.dll
+D:\softwaredaima\c#\KuWoMusic2019\KuWoMusic2019\obj\Debug\KuWoMusic2019.csproj.ResolveComReference.cache
