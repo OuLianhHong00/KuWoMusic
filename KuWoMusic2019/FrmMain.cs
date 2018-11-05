@@ -80,13 +80,13 @@ namespace KuWoMusic2019
             //加载图片
             img = Image.FromFile(@"img\" + songName[currentSong] + ".jpg");
             this.BackgroundImage = img;
+            picImage.BackgroundImage = img;
         }
         //绘制歌词
-       
+        Graphics g;
         private void frmMain_Paint(object sender, PaintEventArgs e)
         {
-            Graphics  g = e.Graphics;
-            double position = axWindowsMediaPlayer.Ctlcontrols.currentPosition;
+             g = e.Graphics;
             int yStep = 30;
             int x = (int)(this.Width * 0.35);
             int y = 100;
@@ -163,17 +163,21 @@ namespace KuWoMusic2019
         }
        
         //滚动条
-        private void trbProcess_Scroll(object sender, EventArgs e)
+       /* private void trbProcess_Scroll(object sender, EventArgs e)
         {
             axWindowsMediaPlayer.Ctlcontrols.currentPosition = trbProcess.Value * (int)axWindowsMediaPlayer.currentMedia.duration / trbProcess.Maximum;
         }
-        
+        */
         
         int curLyricLine = 0;//当前行
+        double setRectX = 0;//播放记录百分比
         //当前行的timer
         private void timCurrentLine_Tick(object sender, EventArgs e)
         {
             lblDisplayTime.Text = axWindowsMediaPlayer.Ctlcontrols.currentPositionString + "/" + axWindowsMediaPlayer.currentMedia.durationString;
+            if (axWindowsMediaPlayer.Ctlcontrols.currentPosition != 0)
+                setRectX = axWindowsMediaPlayer.Ctlcontrols.currentPosition / axWindowsMediaPlayer.currentMedia.duration;
+            pnlControlBar.Invalidate();//刷新进度条
             //判断播放器状态,看是哪种播放形式
             if (axWindowsMediaPlayer.playState == WMPLib.WMPPlayState.wmppsStopped)
             {
@@ -204,7 +208,7 @@ namespace KuWoMusic2019
                 axWindowsMediaPlayer.Ctlcontrols.play();
             }
                 //当前所唱歌词颜色大小变化
-                double pos = axWindowsMediaPlayer.Ctlcontrols.currentPosition;//当前位置
+              double pos = axWindowsMediaPlayer.Ctlcontrols.currentPosition;//当前位置
               /*  if (lyricFiles.listLyric.Count > 0 && pos >= lyricFiles.listLyric[curLyricLine].totSecond)
                 {
                     for (int j = 0; j < lstLabel.Count; j++)
@@ -228,17 +232,17 @@ namespace KuWoMusic2019
                 if (pos <= lyricFiles.listLyric[i].totSecond)
                 {
                     curLyricLine = i;
-                    scrollLine();
+                    //scrollLine();
                     break;
                 }
                 else if (curLyricLine == lyricFiles.listLyric.Count-2  && pos > lyricFiles.listLyric.Last().totSecond) {
                     curLyricLine = lyricFiles.listLyric.Count-1;
-                    scrollLine();
+                   // scrollLine();
                 }
              }
             this.Refresh();      
         }
-        //滚动条根据歌词滚动
+      /*  //滚动条根据歌词滚动
         public void scrollLine() {
             float currentSecond = lyricFiles.listLyric[curLyricLine].totSecond;
             int count = lyricFiles.listLyric.Count;
@@ -258,7 +262,7 @@ namespace KuWoMusic2019
                     trbProcess.Value = 10;
                 }
             }
-        }
+        }*/
         //上一首
         private void picBeforePlay_Click(object sender, EventArgs e)
         {
@@ -445,7 +449,164 @@ namespace KuWoMusic2019
         {
             isDrag = false;
         }
+        //绘制进度条
+        Rectangle backRect;//进度条背景
+        Rectangle foreRect;//进度
+        Rectangle setRect;//滑块
+        private void pnlControlBar_Paint(object sender, PaintEventArgs e)
+      {
+            //绘制进度条背景
+            backRect = new Rectangle(300,45,500,4);
+            e.Graphics.FillRectangle(Brushes.LightGray, backRect);
+            e.Graphics.DrawRectangle(Pens.LightGray,backRect);
+            //进度
+            foreRect = new Rectangle(300,45,(int)(setRectX*500),4);
+            e.Graphics.FillRectangle(Brushes.IndianRed,foreRect);
+            e.Graphics.DrawRectangle(Pens.IndianRed,foreRect);
+            //滑块
+            setRect = new Rectangle((int)(setRectX*500)+300,43,8,8);
+            e.Graphics.FillRectangle(Brushes.White,setRect);
+            e.Graphics.DrawRectangle(Pens.LightGray,setRect);
+        }
+        //拖动进度条
+        Point originPoint;//记录鼠标点下的坐标
+        Point originSetRectPoint;//记录点下时滑块的坐标
+        bool setRectDown = false;//是否拖动滑块
+        bool backRectDown = false;//是否点击进度条
+        private void pnlControlBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            //拖动滑块
+            if (setRect.Contains(e.Location))
+            {
+                originPoint = e.Location;//鼠标点下的坐标
+                originSetRectPoint = setRect.Location;
+                setRectDown = true;
+            }
+            //直接点击进度条
+            else if(backRect.Contains(e.Location)){
+                backRectDown = true;
+            }
+        }
+        private void pnlControlBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (setRectDown) {
+                int d = e.Location.X - originPoint.X;
+                //拖动后进度的百分比
+                double percent = (double)(originSetRectPoint.X + d - backRect.X) / (backRect.Width - backRect.Height);
+                if (percent < 0)
+                {
+                    axWindowsMediaPlayer.Ctlcontrols.currentPosition = 0;
+                    setRect.X = 300;
+                    foreRect.Width = 0;
+                }
+                else if (percent > 1)
+                {
+                    axWindowsMediaPlayer.Ctlcontrols.currentPosition = percent * axWindowsMediaPlayer.currentMedia.duration;
+                    setRect.X = 800;
+                    foreRect.Width = 500;
+                }
+                else {
+                    axWindowsMediaPlayer.Ctlcontrols.currentPosition = percent * axWindowsMediaPlayer.currentMedia.duration;
+                    foreRect.Width = (int)(percent * backRect.Width);
+                    setRect.X = originSetRectPoint.X + d;
+                }
+            }
+        }
 
-        
+        private void pnlControlBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            setRectDown = false;
+            if (backRectDown) {
+                int d = e.X - 300;
+                double percent = (double)d / 500;
+                axWindowsMediaPlayer.Ctlcontrols.currentPosition = percent * axWindowsMediaPlayer.currentMedia.duration;
+                foreRect.Width = (int)(percent * backRect.Width);
+                setRect.X = originSetRectPoint.X + d;
+            }
+            backRectDown = false;
+        }
+        //音乐进度条
+        Rectangle backMRect;
+        Rectangle foreMRect;
+        Rectangle setMRect;
+        private void pnlSound_Paint(object sender, PaintEventArgs e)
+        {
+            backMRect = new Rectangle(0,10,100,4);
+            e.Graphics.FillRectangle(Brushes.LightGray,backMRect);
+            e.Graphics.DrawRectangle(Pens.LightGray,backMRect);
+            if (!isMute)
+            {
+                foreMRect = new Rectangle(0,10,axWindowsMediaPlayer.settings.volume*100/100,4);
+                e.Graphics.FillRectangle(Brushes.IndianRed,foreMRect);
+                e.Graphics.DrawRectangle(Pens.IndianRed,foreMRect);
+
+                setMRect = new Rectangle(axWindowsMediaPlayer.settings.volume * 100 / 100,8,8,8);
+                e.Graphics.FillRectangle(Brushes.White,setMRect);
+                e.Graphics.DrawRectangle(Pens.LightGray,setMRect);
+            }
+
+        }
+        Point clickMPoint;//鼠标在音量上点击的位置
+        Point originSetMRectPoint;//点击时音量滑块的坐标
+        bool isDragSetRect = false;//拖动滑块
+        bool isClickSoundRect = false;//点击音量条
+        private void pnlSound_MouseDown(object sender, MouseEventArgs e)
+        {
+            //点在滑块上
+            if (setMRect.Contains(e.Location))
+            {
+                clickMPoint = e.Location;
+                originSetMRectPoint = setMRect.Location;
+                isDragSetRect = true;
+            }
+            //点在音量条上
+            else if (backMRect.Contains(e.Location)) {
+                isClickSoundRect = true;
+            }
+            
+        }
+
+        private void pnlSound_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragSetRect) {
+                int d = e.X - clickMPoint.X;
+                double percent = (double)(originSetMRectPoint.X + d - setMRect.X) / (setMRect.Width - setMRect.Height);
+                if (percent < 0)
+                {
+                    axWindowsMediaPlayer.settings.volume = 0;
+                    setMRect.X = 0;
+                    foreMRect.Width = 0;
+                }
+                else if (percent > 1)
+                {
+                    axWindowsMediaPlayer.settings.volume = 100;
+                    setMRect.X = 100;
+                    foreMRect.Width = 100;
+                }
+                else {
+                    axWindowsMediaPlayer.settings.volume = (int)(percent * 100);
+                    foreMRect.Width = (int)(percent * backMRect.Width);
+                    setMRect.X = originSetMRectPoint.X + d;
+                }
+                pnlSound.Invalidate();
+            }
+        }
+
+        private void pnlSound_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragSetRect = false;
+            if (isClickSoundRect) {
+                double vol = (double)(e.X * 100 / 100);
+                axWindowsMediaPlayer.settings.volume = (int)vol;
+                foreRect.Width = e.X;
+                setMRect.X = e.X;
+                pnlSound.Invalidate();
+
+            }
+            isClickSoundRect = false;
+        }
+
+
+
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace KuWoMusic2019
+﻿using System;
+using System.Windows.Forms;
+
+namespace KuWoMusic2019
 {
     partial class frmMain
     {
@@ -31,7 +34,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlControlBar = new System.Windows.Forms.Panel();
-            this.trbProcess = new System.Windows.Forms.TrackBar();
             this.lblDisplayTime = new System.Windows.Forms.Label();
             this.picVoide = new System.Windows.Forms.PictureBox();
             this.picRandom = new System.Windows.Forms.PictureBox();
@@ -46,8 +48,9 @@
             this.picNarrow = new System.Windows.Forms.PictureBox();
             this.picClose = new System.Windows.Forms.PictureBox();
             this.listSongName = new System.Windows.Forms.ListBox();
+            this.picImage = new System.Windows.Forms.PictureBox();
+            this.pnlSound = new System.Windows.Forms.Panel();
             this.pnlControlBar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trbProcess)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picVoide)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picRandom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picAfterPlay)).BeginInit();
@@ -58,12 +61,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picNarrow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlControlBar
             // 
             this.pnlControlBar.BackColor = System.Drawing.Color.Gainsboro;
-            this.pnlControlBar.Controls.Add(this.trbProcess);
+            this.pnlControlBar.Controls.Add(this.pnlSound);
+            this.pnlControlBar.Controls.Add(this.picImage);
             this.pnlControlBar.Controls.Add(this.lblDisplayTime);
             this.pnlControlBar.Controls.Add(this.picVoide);
             this.pnlControlBar.Controls.Add(this.picRandom);
@@ -74,26 +79,22 @@
             this.pnlControlBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlControlBar.Location = new System.Drawing.Point(0, 633);
             this.pnlControlBar.Name = "pnlControlBar";
-            this.pnlControlBar.Size = new System.Drawing.Size(1390, 98);
+            this.pnlControlBar.Size = new System.Drawing.Size(1510, 98);
             this.pnlControlBar.TabIndex = 0;
-            // 
-            // trbProcess
-            // 
-            this.trbProcess.BackColor = System.Drawing.Color.White;
-            this.trbProcess.Location = new System.Drawing.Point(425, 27);
-            this.trbProcess.Name = "trbProcess";
-            this.trbProcess.Size = new System.Drawing.Size(572, 56);
-            this.trbProcess.TabIndex = 2;
-            this.trbProcess.Scroll += new System.EventHandler(this.trbProcess_Scroll);
+            this.pnlControlBar.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlControlBar_Paint);
+            this.pnlControlBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlControlBar_MouseDown);
+            this.pnlControlBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlControlBar_MouseMove);
+            this.pnlControlBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlControlBar_MouseUp);
             // 
             // lblDisplayTime
             // 
             this.lblDisplayTime.AutoSize = true;
             this.lblDisplayTime.Font = new System.Drawing.Font("宋体", 12F);
-            this.lblDisplayTime.Location = new System.Drawing.Point(1058, 48);
+            this.lblDisplayTime.Location = new System.Drawing.Point(1085, 49);
             this.lblDisplayTime.Name = "lblDisplayTime";
-            this.lblDisplayTime.Size = new System.Drawing.Size(0, 20);
+            this.lblDisplayTime.Size = new System.Drawing.Size(59, 20);
             this.lblDisplayTime.TabIndex = 1;
+            this.lblDisplayTime.Text = "00:00";
             // 
             // picVoide
             // 
@@ -113,7 +114,7 @@
             this.picRandom.BackgroundImage = global::KuWoMusic2019.Properties.Resources.retweet;
             this.picRandom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picRandom.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picRandom.Location = new System.Drawing.Point(1201, 26);
+            this.picRandom.Location = new System.Drawing.Point(1221, 25);
             this.picRandom.Name = "picRandom";
             this.picRandom.Size = new System.Drawing.Size(53, 57);
             this.picRandom.TabIndex = 0;
@@ -126,7 +127,7 @@
             this.picAfterPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picAfterPlay.BackgroundImage")));
             this.picAfterPlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picAfterPlay.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picAfterPlay.Location = new System.Drawing.Point(311, 27);
+            this.picAfterPlay.Location = new System.Drawing.Point(247, 26);
             this.picAfterPlay.Name = "picAfterPlay";
             this.picAfterPlay.Size = new System.Drawing.Size(53, 57);
             this.picAfterPlay.TabIndex = 0;
@@ -138,7 +139,7 @@
             this.picPlay.BackColor = System.Drawing.Color.Transparent;
             this.picPlay.BackgroundImage = global::KuWoMusic2019.Properties.Resources.play_circle_o;
             this.picPlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picPlay.Location = new System.Drawing.Point(216, 22);
+            this.picPlay.Location = new System.Drawing.Point(152, 21);
             this.picPlay.Name = "picPlay";
             this.picPlay.Size = new System.Drawing.Size(65, 67);
             this.picPlay.TabIndex = 0;
@@ -151,7 +152,7 @@
             this.picBeforePlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picBeforePlay.BackgroundImage")));
             this.picBeforePlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBeforePlay.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picBeforePlay.Location = new System.Drawing.Point(133, 26);
+            this.picBeforePlay.Location = new System.Drawing.Point(69, 25);
             this.picBeforePlay.Name = "picBeforePlay";
             this.picBeforePlay.Size = new System.Drawing.Size(53, 57);
             this.picBeforePlay.TabIndex = 0;
@@ -171,7 +172,6 @@
             this.picSongName.TabStop = false;
             this.picSongName.Click += new System.EventHandler(this.picSongName_Click);
             this.picSongName.MouseEnter += new System.EventHandler(this.picSongName_MouseEnter);
-            
             // 
             // axWindowsMediaPlayer1
             // 
@@ -207,7 +207,7 @@
             this.picNarrow.BackColor = System.Drawing.Color.LightSteelBlue;
             this.picNarrow.BackgroundImage = global::KuWoMusic2019.Properties.Resources.minus;
             this.picNarrow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picNarrow.Location = new System.Drawing.Point(1241, 26);
+            this.picNarrow.Location = new System.Drawing.Point(1401, 12);
             this.picNarrow.Name = "picNarrow";
             this.picNarrow.Size = new System.Drawing.Size(39, 37);
             this.picNarrow.TabIndex = 3;
@@ -221,7 +221,7 @@
             this.picClose.BackColor = System.Drawing.Color.LightSteelBlue;
             this.picClose.BackgroundImage = global::KuWoMusic2019.Properties.Resources.close;
             this.picClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picClose.Location = new System.Drawing.Point(1299, 26);
+            this.picClose.Location = new System.Drawing.Point(1459, 12);
             this.picClose.Name = "picClose";
             this.picClose.Size = new System.Drawing.Size(39, 37);
             this.picClose.TabIndex = 3;
@@ -245,12 +245,33 @@
             this.listSongName.Visible = false;
             this.listSongName.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listSongName_DrawItem);
             // 
+            // picImage
+            // 
+            this.picImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.picImage.Location = new System.Drawing.Point(323, 22);
+            this.picImage.Name = "picImage";
+            this.picImage.Size = new System.Drawing.Size(68, 68);
+            this.picImage.TabIndex = 2;
+            this.picImage.TabStop = false;
+            // 
+            // pnlSound
+            // 
+            this.pnlSound.BackColor = System.Drawing.Color.Transparent;
+            this.pnlSound.Location = new System.Drawing.Point(1358, 39);
+            this.pnlSound.Name = "pnlSound";
+            this.pnlSound.Size = new System.Drawing.Size(139, 29);
+            this.pnlSound.TabIndex = 3;
+            this.pnlSound.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSound_Paint);
+            this.pnlSound.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlSound_MouseDown);
+            this.pnlSound.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlSound_MouseMove);
+            this.pnlSound.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlSound_MouseUp);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1390, 731);
+            this.ClientSize = new System.Drawing.Size(1510, 731);
             this.Controls.Add(this.listSongName);
             this.Controls.Add(this.picNarrow);
             this.Controls.Add(this.picClose);
@@ -268,7 +289,6 @@
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseUp);
             this.pnlControlBar.ResumeLayout(false);
             this.pnlControlBar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trbProcess)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picVoide)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picRandom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picAfterPlay)).EndInit();
@@ -279,6 +299,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picNarrow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -295,12 +316,13 @@
         private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer;
         private System.Windows.Forms.Label lblDisplayTime;
         private System.Windows.Forms.Timer timCurrentLine;
-        private System.Windows.Forms.TrackBar trbProcess;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.PictureBox picClose;
         private System.Windows.Forms.PictureBox picNarrow;
         private System.Windows.Forms.PictureBox picBeforePlay;
         private System.Windows.Forms.ListBox listSongName;
+        private PictureBox picImage;
+        private Panel pnlSound;
     }
 }
 
